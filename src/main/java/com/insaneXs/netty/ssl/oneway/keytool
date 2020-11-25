@@ -1,0 +1,16 @@
+/*
+ *生成服务器密钥和仓库
+ * keytool是jdk自带的工具
+ * -genkey 生成密钥 -alias 别名 -keysize 密钥大小 -validity 有效日期
+ * -keyalg 加密算法 -dname 证书持有者信息 -keypass 密钥访问密码 -storepass 仓库访问密码 -keystore仓库名
+ */
+keytool -genkey -alias securechat -keysize 2048 -validity 365 -keyalg RSA -dname "CN=localhost" -keypass sNetty -storepass sNetty -keystore E:\ks\sChat.jks
+
+//生成客户端密钥和证书
+keytool -genkey -alias smcc -keysize 2048 -validity 365 -keyalg RSA -dname "CN=localhost" -keypass cNetty -storepass cNetty -keystore E:\ks\cChat.jks
+
+//从服务端仓库将密钥导出成证书
+keytool -export -alias securechat -keystore sChat.jks -storepass sNetty -file sChat.cer
+
+//将证书导入到客户端仓库
+keytool -import -trustcacerts -alias securechat -file sChat.cer -storepass cNetty -keystore cChat.jks
